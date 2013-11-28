@@ -24,6 +24,12 @@ test:
     slave1:
       <<: *test_default
       database: db/test_slave1.sqlite3
+    slave2:
+      <<: *test_default
+      database: db/test_slave2.sqlite3
+    slave3:
+      <<: *test_default
+      database: db/test_slave3.sqlite3
 
 test_user:
   <<: *test_default

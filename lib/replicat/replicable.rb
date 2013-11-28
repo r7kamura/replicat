@@ -42,6 +42,13 @@ module Replicat
       def replications
         configuration["replications"]
       end
+
+      def using(connection_name)
+        proxy.current_connection_name = connection_name
+        yield
+      ensure
+        proxy.current_connection_name = nil
+      end
     end
   end
 end

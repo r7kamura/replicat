@@ -23,10 +23,59 @@ describe Replicat::Replicable do
     end
   end
 
+  describe ".using" do
+    context "with :master" do
+      it "executes SQL query on master connection" do
+        Recipe.create(title: "test")
+        Recipe.using(:master) do
+          Recipe.first.should_not == nil
+        end
+      end
+    end
+
+    context "with slave name" do
+      after do
+        Recipe.using(:slave1) do
+          Recipe.destroy_all
+        end
+      end
+
+      it "executes SQL query on specified slave" do
+        Recipe.using(:slave1) do
+          Recipe.create(title: "test")
+        end
+        Recipe.using(:slave1) do
+          Recipe.first.should_not == nil
+        end
+        Recipe.using(:slave2) do
+          Recipe.first.should == nil
+        end
+      end
+    end
+  end
+
   describe ".proxy" do
-    it "proxies SELECT statement to one of the replication connections" do
-      # This should return false because the test_slave1.sqlite3 does not have any table.
-      Recipe.table_exists?.should == false
+    it "prixies INSERT to master & SELECT to replications" do
+      Recipe.create(title: "test")
+      Recipe.first.should == nil
+      Recipe.first.should == nil
+      Recipe.first.should == nil
+    end
+
+    it "selects replications by roundrobin order" do
+      Recipe.using(:slave1) do
+        Recipe.create(title: "test")
+      end
+      Recipe.proxy.index = 0
+      Recipe.first.should_not == nil
+      Recipe.first.should == nil
+      Recipe.first.should == nil
+      Recipe.first.should_not == nil
+      Recipe.first.should == nil
+      Recipe.first.should == nil
+      Recipe.first.should_not == nil
+      Recipe.first.should == nil
+      Recipe.first.should == nil
     end
   end
 end
