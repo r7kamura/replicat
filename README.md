@@ -45,33 +45,41 @@ production:
 Now SELECT queries of User model will be sent to slave connections.
 
 ```ruby
+# INSERT query is sent to master.
 User.create(name: "replicat")
-User.first #=> nil
+
+# SELECT query is sent to slave.
+User.first
 ```
 
 ### using
 `using` can help you specify particular connection.
-`using(:master)` uses master connection.
+When you want to send queries to master,
+you can use `using(:master)` to do that (:master is reserved name for `using` method).
+When you want to send queries to a particular slave,
+you can use the slave's name on database.yml like `using(:slave1)`.
 
 ```ruby
-User.create(name: "replicat")
-User.using(:master) { User.first } #=> #<User id: 2, name: "replicat">
+# SELECT query is sent to master.
+User.using(:master) { User.first }
+
+# INSERT query is sent to slave1.
+User.using(:slave1) { User.create(name: "replicat") }
 ```
 
 ### round-robin
 slave connections are balanced by round-robin way.
 
 ```ruby
-User.using(:slave1) { User.create(name: "replicat") }
-User.first #=> #<User id: 2, name: "replicat">
-User.first #=> nil
-User.first #=> nil
-User.first #=> #<User id: 2, name: "replicat">
-User.first #=> nil
-User.first #=> nil
-User.first #=> #<User id: 2, name: "replicat">
-User.first #=> nil
-User.first #=> nil
+User.first # sent to slave1
+User.first # sent to slave2
+User.first # sent to slave3
+User.first # sent to slave1
+User.first # sent to slave2
+User.first # sent to slave3
+User.first # sent to slave1
+User.first # sent to slave2
+User.first # sent to slave3
 ```
 
 ### multi master-slave set
