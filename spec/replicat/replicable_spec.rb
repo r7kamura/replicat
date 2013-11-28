@@ -1,14 +1,6 @@
 require "spec_helper"
 
 describe Replicat::Replicable do
-  describe ".has_any_replication?" do
-    context "with any replication in connection settings" do
-      it "returns true" do
-        Recipe.should have_any_replication
-      end
-    end
-  end
-
   describe ".connection_with_proxy" do
     context "with non-replicable model" do
       it "returns normal connection" do
