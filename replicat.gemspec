@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.version       = Replicat::VERSION
   spec.authors       = ["Ryo Nakamura"]
   spec.email         = ["r7kamura@gmail.com"]
-  spec.description   = "Database replication helper for ActiveRecord."
+  spec.summary       = "master-slave replication helper for ActiveRecord"
   spec.homepage      = "https://github.com/r7kamura/replicat"
   spec.license       = "MIT"
 
