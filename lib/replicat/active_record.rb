@@ -1,1 +1,1 @@
-ActiveRecord::Base.send(:include, Replicat::Replicable)
+ActiveRecord::Base.extend Replicat::Model

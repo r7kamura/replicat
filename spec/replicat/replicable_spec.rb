@@ -7,18 +7,12 @@ describe Replicat::Replicable do
         Recipe.should have_any_replication
       end
     end
-
-    context "without any replication in connection settings" do
-      it "returns false" do
-        User.should_not have_any_replication
-      end
-    end
   end
 
   describe ".connection_with_proxy" do
     context "with non-replicable model" do
       it "returns normal connection" do
-        User.connection.should == User.connection_without_proxy
+        User.connection.should_not be_a Replicat::Proxy
       end
     end
 

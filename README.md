@@ -8,8 +8,14 @@ gem "replicat"
 ```
 
 ## Usage
-1. add replication settings into config/database.yml
-2. modify your replicable model
+Modify your replicable models & config/database.yml.
+
+### model
+```ruby
+class User < ActiveRecord::Base
+  replicate
+end
+```
 
 ### config/database.yml
 ```
@@ -34,14 +40,4 @@ production:
       encoding: utf8
       host: 192.168.24.4
       port: 3306
-```
-
-### model
-We have to set `connection_name` to let the model to know which connection to use.
-After this configuration, all SELECT statements are requested to one of the replication connnections.
-
-```ruby
-class User < ActiveRecord::Base
-  self.connection_name = "production"
-end
 ```

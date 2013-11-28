@@ -1,5 +1,6 @@
 require "active_record"
-require "replicat/version"
+require "replicat/model"
 require "replicat/proxy"
 require "replicat/replicable"
+require "replicat/version"
 require "replicat/active_record"

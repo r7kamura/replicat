@@ -1,3 +1,3 @@
 class Recipe < ActiveRecord::Base
-  self.connection_name = "test"
+  replicate "test"
 end
