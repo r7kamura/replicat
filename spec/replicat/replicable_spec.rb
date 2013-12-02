@@ -45,13 +45,27 @@ describe Replicat::Replicable do
       end
     end
 
+    context "with no block" do
+      it "can be used as scope" do
+        Recipe.using(:slave1).create(title: "test")
+        Recipe.using(:slave1).first.should_not == nil
+      end
+    end
+
+    context "with scope" do
+      it "works well" do
+        Recipe.all.using(:slave1).create(title: "test")
+        Recipe.where(title: "test").using(:slave1).first.should_not == nil
+      end
+    end
+
     context "with belongs_to association" do
       let!(:ingredient) do
-        Ingredient.using(:slave1) { Ingredient.create(name: "test", recipe_id: recipe.id) }
+        Ingredient.using(:slave1).create(name: "test", recipe_id: recipe.id)
       end
 
       let(:recipe) do
-        Recipe.using(:slave1) { Recipe.create(title: "test") }
+        Recipe.using(:slave1).create(title: "test")
       end
 
       it "works well" do

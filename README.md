@@ -61,10 +61,13 @@ you can use the slave's name on database.yml like `using(:slave1)`.
 
 ```ruby
 # SELECT query is sent to master.
-User.using(:master) { User.first }
+User.using(:master).first
 
 # INSERT query is sent to slave1.
-User.using(:slave1) { User.create(name: "replicat") }
+User.using(:slave1).create(name: "replicat")
+
+# :slave1 is used for User connection in the passed block.
+User.using(:slave1) { blog.user }
 ```
 
 ### round-robin

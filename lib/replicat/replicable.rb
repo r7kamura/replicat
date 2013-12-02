@@ -44,10 +44,14 @@ module Replicat
       end
 
       def using(connection_name)
-        proxy.current_connection_name = connection_name
-        yield
+        if block_given?
+          proxy.current_connection_name = connection_name
+          yield
+        else
+          ScopeProxy.new(klass: self, connection_name: connection_name)
+        end
       ensure
-        proxy.current_connection_name = nil
+        proxy.current_connection_name = nil if block_given?
       end
     end
   end
