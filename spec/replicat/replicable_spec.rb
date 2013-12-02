@@ -19,29 +19,26 @@ describe Replicat::Replicable do
     context "with :master" do
       it "executes SQL query on master connection" do
         Recipe.create(title: "test")
-        Recipe.using(:master) do
-          Recipe.first.should_not == nil
-        end
+        Recipe.using(:master).first.should_not == nil
       end
     end
 
     context "with slave name" do
       after do
-        Recipe.using(:slave1) do
-          Recipe.destroy_all
-        end
+        Recipe.using(:slave1).destroy_all
       end
 
       it "executes SQL query on specified slave" do
-        Recipe.using(:slave1) do
-          Recipe.create(title: "test")
-        end
-        Recipe.using(:slave1) do
-          Recipe.first.should_not == nil
-        end
-        Recipe.using(:slave2) do
-          Recipe.first.should == nil
-        end
+        Recipe.using(:slave1).create(title: "test")
+        Recipe.using(:slave1).first.should_not == nil
+        Recipe.using(:slave2).first.should == nil
+      end
+    end
+
+    context "with block" do
+      it "forces the receiver to use specified connection in the passed block" do
+        Recipe.using(:slave1).create(title: "test")
+        Recipe.using(:slave1) { Recipe.first.should_not == nil }
       end
     end
 
@@ -75,11 +72,11 @@ describe Replicat::Replicable do
 
     context "with has_many association" do
       let!(:ingredient) do
-        Ingredient.using(:slave1) { Ingredient.create(name: "test", recipe_id: recipe.id) }
+        Ingredient.using(:slave1).create(name: "test", recipe_id: recipe.id)
       end
 
       let(:recipe) do
-        Recipe.using(:slave1) { Recipe.create(title: "test") }
+        Recipe.using(:slave1).create(title: "test")
       end
 
       it "works well" do
@@ -97,9 +94,7 @@ describe Replicat::Replicable do
     end
 
     it "selects replications by roundrobin order" do
-      Recipe.using(:slave1) do
-        Recipe.create(title: "test")
-      end
+      Recipe.using(:slave1).create(title: "test")
       Recipe.proxy.index = 0
       Recipe.first.should_not == nil
       Recipe.first.should == nil
