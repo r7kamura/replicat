@@ -44,6 +44,34 @@ describe Replicat::Replicable do
         end
       end
     end
+
+    context "with belongs_to association" do
+      let!(:ingredient) do
+        Ingredient.using(:slave1) { Ingredient.create(name: "test", recipe_id: recipe.id) }
+      end
+
+      let(:recipe) do
+        Recipe.using(:slave1) { Recipe.create(title: "test") }
+      end
+
+      it "works well" do
+        Recipe.using(:slave1) { ingredient.recipe.should == recipe }
+      end
+    end
+
+    context "with has_many association" do
+      let!(:ingredient) do
+        Ingredient.using(:slave1) { Ingredient.create(name: "test", recipe_id: recipe.id) }
+      end
+
+      let(:recipe) do
+        Recipe.using(:slave1) { Recipe.create(title: "test") }
+      end
+
+      it "works well" do
+        Ingredient.using(:slave1) { recipe.ingredients.should == [ingredient] }
+      end
+    end
   end
 
   describe ".proxy" do

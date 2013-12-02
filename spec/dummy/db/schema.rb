@@ -23,4 +23,11 @@ ActiveRecord::Schema.define(version: 0) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "ingredients", force: true do |t|
+    t.string "name", null: false
+    t.integer "recipe_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 end
