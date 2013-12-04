@@ -31,4 +31,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "sass-rails", ">= 3.0.10"
   spec.add_development_dependency "sqlite3"
   spec.add_development_dependency "uglifier"
+  spec.add_development_dependency "mysql2"
 end
