@@ -86,7 +86,7 @@ describe Replicat::Replicable do
   end
 
   describe ".proxy" do
-    it "prixies INSERT to master & SELECT to replications" do
+    it "proxies INSERT to master & SELECT to replications" do
       Recipe.create(title: "test")
       Recipe.first.should == nil
       Recipe.first.should == nil
